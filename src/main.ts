@@ -1,6 +1,5 @@
 import './style.scss'
+import { init, animate } from '~components/scene'
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <p>
-    Hello, world!
-  </p>`
+init()
+animate()
