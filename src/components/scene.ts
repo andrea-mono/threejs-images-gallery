@@ -16,15 +16,32 @@ const stats = Stats()
 const gui = new GUI()
 const cube = createCube()
 
+const data = {
+    showPerformance: false,
+    wireframe: false,
+    visible: true,
+}
+
 function debug() {
-    const data = {
-        wireframe: false,
-        visible: true,
-    }
+    let mounted = false
 
     const setCubeVisibility = (value: boolean) => (cube.visible = value)
     const setMaterialWireframe = (value: boolean) =>
         (defaultMaterial.wireframe = value)
+
+    const toggleStats = (value: boolean) => {
+        if (!document.body.contains(stats.dom) && !mounted) {
+            mounted = true
+            return
+        }
+        if (!value) {
+            document.body.removeChild(stats.dom)
+            return
+        }
+        document.body.appendChild(stats.dom)
+    }
+
+    gui.add(data, 'showPerformance').onChange(toggleStats)
 
     const cubeFolder = gui.addFolder('Cube')
     cubeFolder.add(data, 'visible').onChange(setCubeVisibility)
@@ -32,10 +49,10 @@ function debug() {
 
     setCubeVisibility(data.visible)
     setMaterialWireframe(data.wireframe)
+    toggleStats(data.showPerformance)
 }
 
 export function init() {
-    document.body.appendChild(stats.dom)
     document.getElementById('app')?.appendChild(renderer.domElement)
     renderer.setSize(sizes.w, sizes.h)
     renderer.setPixelRatio(window.devicePixelRatio)
@@ -55,5 +72,5 @@ export function init() {
 export function animate() {
     window.requestAnimationFrame(animate)
     renderer.render(scene, mainCamera)
-    stats.update()
+    if (data.showPerformance) stats.update()
 }
