@@ -8,3 +8,10 @@ body,
 html {
     overflow: hidden;
 }
+
+#app {
+    > canvas {
+        position: fixed;
+        inset: 0;
+    }
+}
